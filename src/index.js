@@ -1,12 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import { Home } from "./Home";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import queryString from "query-string";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <BrowserRouter>
+    <Switch>
+      <Route
+        path="/"
+        exact
+        render={props => {
+          console.log(props.location.search);
+          const parsed = queryString.parse(props.location.search);
+          console.log(parsed);
+          const page = parsed.page ? parseInt(parsed.page, 10) : 1;
+          const pageNotNan = Number.isNaN(page) ? 1 : page;
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+          return <Home currentPage={pageNotNan} />;
+        }}
+      />
+    </Switch>
+  </BrowserRouter>,
+  document.getElementById("root")
+);
